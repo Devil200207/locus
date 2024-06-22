@@ -1,6 +1,8 @@
 const express = require("express");
 const {addUser,verifyUser} = require("./types");
 const {User} = require("./database/db");
+const {JWT_SECRET} = require('./config');
+const jwt = require("jsonwebtoken");
 const app = express();
 
 app.use(express.json());
@@ -8,7 +10,6 @@ app.use(express.json());
 app.post("/user/signup", async(req, res) => {
     const userbody = req.body;
     const userParse = addUser.safeParse(userbody); // zod verification
-    console.log(userParse);
 
     if(userParse.success)
     {
@@ -23,26 +24,32 @@ app.post("/user/signup", async(req, res) => {
                 res.status(400).send("User already exists");
                 return;
             }
+
             const NUser = await User.create(userbody);
             const userId = NUser._id;
+
 
             const token = jwt.sign({
                 userId
             },JWT_SECRET)
 
+
             res.status(201).json({
                 msg: "User created successfully",
                 token:token
             });
+            return;
         }
         catch
         {
+            console.log("in catch");
             res.status(400).send("Invalid add user data");
             return;
         }
     }
     else
     {
+        console.log("in else");
         res.status(400).send("Invalid add user data");
         return;
     }
