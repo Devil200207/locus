@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const authverification = (req,res,next) =>{
     const headertoken = req.headers.authorization;
+    console.log(headertoken);
 
     if(!headertoken || !headertoken.startsWith('Bearer '))
     {

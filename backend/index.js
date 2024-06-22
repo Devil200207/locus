@@ -1,5 +1,6 @@
 const express = require("express");
 const {addUser,verifyUser} = require("./types");
+const cors = require("cors");
 const {User} = require("./database/db");
 const {JWT_SECRET} = require('./config');
 const {authverification} = require('./middlewares/middleware');
@@ -11,6 +12,7 @@ const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(express.json());
+app.use(cors());
 
 app.post("/user/signup", async(req, res) => {
     const userbody = req.body;
